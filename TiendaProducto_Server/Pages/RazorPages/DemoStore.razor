@@ -7,9 +7,22 @@
     <h2 class="text-info">Book list</h2>
 
     <div class="row container">
+
+        <div class="col-12 mt-4">
+            <h4 class="text-info">Books in store</h4>
+        </div>
         @foreach (var item in bookBlazors)
         {
-            <BookItem book="@item"/>
+            <BookItem book="@item" />
+        }
+
+
+        <div class="col-12 mt-4">
+            <h4 class="text-info">Books benefits</h4>
+        </div>
+        @foreach (var item in benefitsLst)
+        {
+            <BookBenefit benefits="@item" />
         }
 
     </div>
@@ -20,7 +33,7 @@
 
 
     List<BookBlazor> bookBlazors = new List<BookBlazor>();
-
+    List<BookBenefits> benefitsLst = new List<BookBenefits>();
     protected override void OnInitialized()
     {
         bookBlazors.Add(new BookBlazor()
@@ -66,6 +79,25 @@
                 new BookType{ Id =3, Name="OOP", Value="10"},
                 new BookType{ Id =4, Name="SOLID", Value="10"},
             }
+        });
+
+        benefitsLst.Add(new BookBenefits
+        {
+            Id=1,
+            Name = "Lorem 1",
+            Description ="Lorem ipsum dolor sit amet"
+        });
+        benefitsLst.Add(new BookBenefits
+        {
+            Id = 2,
+            Name = "Lorem 2",
+            Description = "Lorem ipsum dolor sit amet"
+        });
+        benefitsLst.Add(new BookBenefits
+        {
+            Id = 3,
+            Name = "Lorem 3",
+            Description = "Lorem ipsum dolor sit amet"
         });
     }
 }

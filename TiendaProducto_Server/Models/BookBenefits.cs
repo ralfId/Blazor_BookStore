@@ -8,7 +8,7 @@ namespace TiendaProducto_Server.Models
     public class BookBenefits
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }
