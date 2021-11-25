@@ -1,0 +1,25 @@
+﻿@using Models 
+
+
+<div class="bg-light border p-2 col-5 m-3">
+    <h4 class="text-secondary">Libro: @book.Id</h4>
+    @book.Name<br />
+    @book.Price.ToString("c")<br />
+    <input type="checkbox" @bind-value="book.Is_InStock" checked="@(book.Is_InStock ? "checked" : null)" />
+    <span>
+        Este libro esta: @(book.Is_InStock ? "Agotado" : "Disponible")
+    </span>
+    @if (!book.Is_InStock)
+    {
+        @foreach (var type in book.BookType)
+        {
+            <p>@type.Name - @type.Value</p>
+        }
+    }
+    <EditDeleteBtn isAdmin="false" />
+</div>
+
+@code {
+    [Parameter]
+    public BookBlazor book { get; set; }
+}

@@ -9,23 +9,7 @@
     <div class="row container">
         @foreach (var item in bookBlazors)
         {
-        <div class="bg-light border p-2 col-5">
-            <h4 class="text-secondary">Libro: @item.Id</h4>
-            @item.Name<br />
-            @item.Price.ToString("c")<br />
-            <input type="checkbox" @bind-value="item.Is_InStock" checked="@(item.Is_InStock ? "checked" : null)" />
-            <span>
-                Este libro esta: @(item.Is_InStock ? "Agotado" : "Disponible")
-            </span>
-            @if (!item.Is_InStock)
-            {
-                @foreach (var type in item.BookType)
-                {
-                    <p>@type.Name - @type.Value</p>
-                }
-            }
-            <EditDeleteBtn isAdmin="false"/>
-        </div>
+            <BookItem book="@item"/>
         }
 
     </div>
