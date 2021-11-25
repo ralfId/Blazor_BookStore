@@ -1,6 +1,6 @@
 ﻿@page "/demoStore"
-@using Models 
- 
+@using Models
+
 <h3>DemoStore</h3>
 
 <div class="border m-2 mt-3 " style="background-color: azure">
@@ -10,10 +10,11 @@
 
         <div class="col-12 mt-4">
             <h4 class="text-info">Books in store</h4>
+            <h5>Books selected: @selectedBooks </h5>
         </div>
         @foreach (var item in bookBlazors)
         {
-            <BookItem book="@item" />
+            <BookItem OnBookSelectedChecked="changeCounter"  book="@item" />
         }
 
 
@@ -22,16 +23,18 @@
         </div>
         @foreach (var item in benefitsLst)
         {
-            <BookBenefit benefits="@item" />
+            <BookBenefit benefits="@item" OnBenefitSelected="changeBenefit" />
         }
 
+        <h5>Beneficio seleccionado: <strong>@selectedBenefit</strong></h5>
     </div>
 </div>
 
 
 @code {
 
-
+    public int selectedBooks { get; set; } = 0;
+    public string selectedBenefit { get; set; }
     List<BookBlazor> bookBlazors = new List<BookBlazor>();
     List<BookBenefits> benefitsLst = new List<BookBenefits>();
     protected override void OnInitialized()
@@ -43,7 +46,7 @@
             Price = 12,
             Is_InStock = true,
             BookType = new List<BookType>
-            {
+        {
                 new BookType{ Id =1, Name="Programacion", Value="10"},
                 new BookType{ Id =2, Name="Diseño", Value="10"},
                 new BookType{ Id =3, Name="OOP", Value="10"},
@@ -58,7 +61,7 @@
             Price = 12,
             Is_InStock = true,
             BookType = new List<BookType>
-            {
+        {
                 new BookType{ Id =1, Name="Programacion", Value="10"},
                 new BookType{ Id =2, Name="Diseño", Value="10"},
                 new BookType{ Id =3, Name="OOP", Value="10"},
@@ -73,7 +76,7 @@
             Price = 12,
             Is_InStock = true,
             BookType = new List<BookType>
-            {
+        {
                 new BookType{ Id =1, Name="Programacion", Value="10"},
                 new BookType{ Id =2, Name="Diseño", Value="10"},
                 new BookType{ Id =3, Name="OOP", Value="10"},
@@ -83,9 +86,9 @@
 
         benefitsLst.Add(new BookBenefits
         {
-            Id=1,
+            Id = 1,
             Name = "Lorem 1",
-            Description ="Lorem ipsum dolor sit amet"
+            Description = "Lorem ipsum dolor sit amet"
         });
         benefitsLst.Add(new BookBenefits
         {
@@ -99,5 +102,17 @@
             Name = "Lorem 3",
             Description = "Lorem ipsum dolor sit amet"
         });
+
+
+    }
+
+    protected void changeCounter(bool isSelected)
+    {
+        if (isSelected) { selectedBooks++; } else { selectedBooks--; }
+    }
+
+    protected void changeBenefit(string benefitName)
+    {
+        selectedBenefit = benefitName;
     }
 }

@@ -1,7 +1,9 @@
-﻿@using Models 
+﻿@using Models
 
 
 <div class="bg-light border p-2 col-5 m-3">
+    <input type="checkbox" @onchange="ChangeOnBookSelected" />
+    <br />
     <h4 class="text-secondary">Libro: @book.Id</h4>
     @book.Name<br />
     @book.Price.ToString("c")<br />
@@ -22,4 +24,12 @@
 @code {
     [Parameter]
     public BookBlazor book { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnBookSelectedChecked { get; set; }
+
+    protected async Task ChangeOnBookSelected(ChangeEventArgs e)
+    {
+        await OnBookSelectedChecked.InvokeAsync((bool)e.Value);
+    }
 }

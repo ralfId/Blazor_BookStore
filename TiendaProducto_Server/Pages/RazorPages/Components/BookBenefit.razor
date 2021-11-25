@@ -1,13 +1,21 @@
 ﻿@using TiendaProducto_Server.Models
 
-<div class="bg-light border p-2 col-5 offset-1">
+<div class="bg-light border p-2 col-5 offset-1" @onclick="(arg) => ChangeBenefitSelected(arg, benefits.Name)">
     <h4 class="text-secondary">Benefit: @benefits.Id</h4>
     @benefits.Name<br />
     @benefits.Description<br />
 </div>
 
 @code {
-    
+
     [Parameter]
     public BookBenefits benefits { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnBenefitSelected { get; set; }
+
+    protected async Task ChangeBenefitSelected(MouseEventArgs e, string name)
+    {
+        await OnBenefitSelected.InvokeAsync((string)name);
+    }
 }
