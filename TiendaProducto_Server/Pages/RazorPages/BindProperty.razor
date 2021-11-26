@@ -1,0 +1,132 @@
+﻿@page "/BindProperty"
+@using Models
+@*<h1>Hello, world!</h1>
+
+    Welcome to your new app.
+
+    <SurveyPrompt Title="How is Blazor working for you?" />*@
+<h2 class="bg-light border p-2">
+    Primer Libro
+</h2>
+
+
+@*one-way data: @book.Name*@
+Name: @book.Name
+<br />
+Price: @book.Price
+<br />
+@*bidirectional data: @book.Name*@
+<input type="number" @bind-value="@book.Price" @bind-value:event="oninput"/>
+<br/>
+
+<input type="checkbox" @bind-value="book.Is_InStock" checked="@(book.Is_InStock ? "check" : null)"/>
+Book in stock?
+<span>@(book.Is_InStock ? "Yes" : "No")</span>
+<br />
+<br />
+
+@*fill select with list*@
+<select @bind="BookType_Selected">
+    @foreach (var item in book.BookType)
+    {
+        <option value="@item.Name">@item.Name</option>
+    }
+</select>
+<span> the book type is: @BookType_Selected</span>
+
+<div class="m-2">
+    <table class="bg-dark">
+        @foreach (var item in bookBlazors)
+        {
+        <tr>
+            <td>
+                <input type="text" @bind-value="item.Name" @bind-value:event="oninput" />
+            </td>
+            <td>
+                <input type="text" @bind-value="item.Price" @bind-value:event="oninput" />
+            </td>
+            @foreach (var itemType in item.BookType)
+            {
+                <td>@itemType.Name - @itemType.Value</td>
+            }
+        </tr>
+        }
+    </table>
+    
+    <br />
+
+    @foreach (var item in bookBlazors)
+    {
+        <p>el libro: @item.Name, tiene el precio de: @item.Price</p>
+    }
+</div>
+
+@code{
+        string BookType_Selected = "";
+
+        BookBlazor book = new BookBlazor()
+        {
+            Id = 1,
+            Name = "Blazor Apps Basic",
+            Price = 12,
+            Is_InStock = true,
+            BookType = new List<BookType>
+               {
+                    new BookType { Id = 1, Name = "Programacion", Value = "10" },
+                    new BookType { Id = 2, Name = "Diseño", Value = "10" },
+                    new BookType { Id = 3, Name = "OOP", Value = "10" },
+                    new BookType { Id = 4, Name = "SOLID", Value = "10" },
+               }
+        };
+
+
+        List <BookBlazor> bookBlazors = new List<BookBlazor>();
+
+    protected override void OnInitialized()
+    {
+        bookBlazors.Add(new BookBlazor()
+        {
+            Id = 1,
+            Name = "Blazor Apps Basic",
+            Price = 12,
+            Is_InStock = true,
+            BookType = new List<BookType>
+            {
+                new BookType{ Id =1, Name="Programacion", Value="10"},
+                new BookType{ Id =2, Name="Diseño", Value="10"},
+                new BookType{ Id =3, Name="OOP", Value="10"},
+                new BookType{ Id =4, Name="SOLID", Value="10"},
+            }
+        });
+
+        bookBlazors.Add(new BookBlazor()
+        {
+            Id = 1,
+            Name = "Blazor Apps Intermedium",
+            Price = 12,
+            Is_InStock = true,
+            BookType = new List<BookType>
+            {
+                new BookType{ Id =1, Name="Programacion", Value="10"},
+                new BookType{ Id =2, Name="Diseño", Value="10"},
+                new BookType{ Id =3, Name="OOP", Value="10"},
+                new BookType{ Id =4, Name="SOLID", Value="10"},
+            }
+        });
+
+        bookBlazors.Add(new BookBlazor()
+        {
+            Id = 1,
+            Name = "Blazor Apps Advance",
+            Price = 12,
+            Is_InStock = true,
+            BookType = new List<BookType>
+            {
+                new BookType{ Id =1, Name="Programacion", Value="10"},
+                new BookType{ Id =2, Name="Diseño", Value="10"},
+                new BookType{ Id =3, Name="OOP", Value="10"},
+                new BookType{ Id =4, Name="SOLID", Value="10"},
+            }
+        });
+    }
+}
