@@ -18,7 +18,7 @@ namespace DataAccess.Data
         [Required]
         public string Author { get; set; }
         public string Details { get; set; }
-        public DateTime Creation_date { get; set; }
+        public DateTime Creation_date { get; set; } = DateTime.Now;
         public DateTime Update_date { get; set; }
     }
 }
