@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TiendaProducto_Server.Models
+namespace TiendaProducto_Server.Data
 {
     public class BookBlazor
     {

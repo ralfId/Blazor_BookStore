@@ -1,0 +1,61 @@
+﻿@page "/book/addupdatebook";
+@using Models;
+@using Business.Repositories.IRepository;
+@inject IBookRepository bookRepo;
+@inject NavigationManager NavigationManager;
+
+<div class="row mt-2 mb-5">
+    <h3 class="card-title text-primary mb-3 ml-3 ">@Title Book</h3>
+
+    <div class="col-md-12">
+        <EditForm Model="@BookModel" OnValidSubmit="@HandleBook">
+            <DataAnnotationsValidator />
+            @*<ValidationSummary/>*@
+            <div class="form-group">
+                <label>Name</label>
+                <InputText @bind-Value="BookModel.Name" class="form-control"></InputText>
+                <ValidationMessage For="()=> BookModel.Name" />
+            </div>
+
+            <div class="form-group">
+                <label>Price</label>
+                <InputNumber @bind-Value="BookModel.Regular_price" class="form-control"></InputNumber>
+                <ValidationMessage For="()=> BookModel.Regular_price" />
+            </div>
+
+            <div class="form-group">
+                <label>Author</label>
+                <InputText @bind-Value="BookModel.Author" class="form-control"></InputText>
+                <ValidationMessage For="()=> BookModel.Author" />
+            </div>
+
+            <div class="form-group">
+                <label>Details</label>
+                <InputText @bind-Value="BookModel.Details" class="form-control"></InputText>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">@Title book</button>
+                <NavLink href="book" class="btn btn-secundary">Go Back</NavLink>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private BookDto BookModel { get; set; } = new BookDto();
+    private string Title { get; set; } = "Add";
+
+    private async Task HandleBook()
+    {
+        var bookName = await bookRepo.BookExistAsync(BookModel.Name);
+        if (bookName != null)
+        {
+            return;
+        }
+
+        var addBook = await bookRepo.CreateBookAsync(BookModel);
+        NavigationManager.NavigateTo("book");
+    }
+}
