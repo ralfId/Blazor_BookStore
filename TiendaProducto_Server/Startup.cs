@@ -29,6 +29,7 @@ namespace TiendaProducto_Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
