@@ -13,5 +13,7 @@ namespace DataAccess.Data
         {
 
         }
+
+        public DbSet<Book> Book { get; set; }
     }
 }
