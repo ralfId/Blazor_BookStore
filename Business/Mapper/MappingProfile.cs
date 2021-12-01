@@ -15,7 +15,7 @@ namespace Business.Mapper
         {
             CreateMap<BookDto, Book>();
             CreateMap<Book, BookDto>();
-
+            CreateMap<BookImages, BookImagesDto>().ReverseMap();
         }
     }
 }

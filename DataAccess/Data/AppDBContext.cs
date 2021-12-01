@@ -15,5 +15,6 @@ namespace DataAccess.Data
         }
 
         public DbSet<Book> Book { get; set; }
+        public DbSet<BookImages> BookImages { get; set; }
     }
 }
