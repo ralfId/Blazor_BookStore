@@ -3,6 +3,7 @@
 @using Business.Repositories.IRepository;
 @inject IBookRepository bookRepo;
 @inject NavigationManager NavigationManager;
+@inject IJSRuntime JsRuntime;
 
 <div class="row mt-2 mb-5">
     <h3 class="card-title text-primary mb-3 ml-3 ">@Title Book</h3>
@@ -56,6 +57,11 @@
         }
 
         var addBook = await bookRepo.CreateBookAsync(BookModel);
+
+        if (addBook != null)
+        {
+            await JsRuntime.ToastSuccess("Record saved");
+        }
         NavigationManager.NavigateTo("book");
     }
 }
