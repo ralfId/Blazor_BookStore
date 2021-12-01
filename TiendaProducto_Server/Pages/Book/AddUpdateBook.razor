@@ -1,4 +1,5 @@
-﻿@page "/book/addupdatebook";
+﻿@page "/book/addbook";
+@page "/book/updatebook/{Id:int}"
 @using Models;
 @using Business.Repositories.IRepository;
 @inject IBookRepository bookRepo;
@@ -48,20 +49,71 @@
     private BookDto BookModel { get; set; } = new BookDto();
     private string Title { get; set; } = "Add";
 
+    [Parameter]
+    public int? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != null)
+        {
+            //Update a record
+            Title = "Update";
+            BookModel = await bookRepo.GetBookByIdAsync(Id.Value);
+        }
+        else
+        {
+            //add a new record
+            BookModel = new BookDto();
+        }
+    }
+
     private async Task HandleBook()
     {
-        var bookName = await bookRepo.BookExistAsync(BookModel.Name);
-        if (bookName != null)
+
+
+
+        try
         {
-            return;
+            //check if bookexist
+            var ifBookExist = await bookRepo.BookExistAsync(BookModel.Name);
+
+            /**
+            *if the name of the book exists and the id parameter is null, 
+            *it is trying to add a book with an existing name
+            **/
+            if (ifBookExist != null && Id == null)
+            {
+                await JsRuntime.ToastError("This book name already exists");
+                return;
+            }
+            /**
+            *if the name of the book exists and the id parameter is not null, 
+            it is trying to update a book with an existing name
+            **/
+            if (ifBookExist != null && ifBookExist.Id != Id.Value)
+            {
+                await JsRuntime.ToastError("This book name already exists");
+                return;
+            }
+
+            //update a bookk
+            if (ifBookExist != null  && ifBookExist.Id == Id.Value)
+            {
+                var update = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
+
+            }
+            else //add a book
+            {
+                var add = await bookRepo.CreateBookAsync(BookModel);
+            }
+        }
+        catch (Exception)
+        {
+            await JsRuntime.ToastError("An error occurred on the server");
         }
 
-        var addBook = await bookRepo.CreateBookAsync(BookModel);
 
-        if (addBook != null)
-        {
-            await JsRuntime.SwalSuccess("Record saved");
-        }
+      
         NavigationManager.NavigateTo("book");
     }
 }

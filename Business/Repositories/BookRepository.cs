@@ -85,7 +85,7 @@ namespace Business.Repositories
             }
         }
 
-        public async Task<BookDto> UpdateBook(BookDto bookDto, int bookId)
+        public async Task<BookDto> UpdateBookAsync(BookDto bookDto, int bookId)
         {
             try
             {

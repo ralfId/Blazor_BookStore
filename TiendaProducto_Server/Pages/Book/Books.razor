@@ -11,7 +11,7 @@
         </div>
 
         <div class="col-3 offset-1">
-            <NavLink href="book/addupdatebook" class="btn btn-primary form-control">Add new book</NavLink>
+            <NavLink href="book/addbook" class="btn btn-primary form-control">Add new book</NavLink>
         </div>
 
         <div class=" row mt-4">
@@ -36,7 +36,11 @@
                                     <td>@book.Author</td>
                                     <td>@book.Regular_price</td>
                                     <td>@book.Details</td>
-                                    <td></td>
+                                    <td>
+                                        <NavLink href="@($"/book/updatebook/{book.Id}")" class="btn btn-primary">
+                                            Update
+                                        </NavLink>
+                                    </td>
                                 </tr>
                             }
                         }
