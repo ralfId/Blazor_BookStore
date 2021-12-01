@@ -22,5 +22,21 @@ namespace TiendaProducto_Server.Helpers
         {
             await JsRuntime.InvokeVoidAsync("ToastrError", error_message);
         }
+
+
+        public static async ValueTask SwalSuccess(this IJSRuntime JsRuntime, string success_message)
+        {
+            await JsRuntime.InvokeVoidAsync("SwalSuccess", success_message);
+        }
+
+        public static async ValueTask SwalWarning(this IJSRuntime JsRuntime, string warning_message)
+        {
+            await JsRuntime.InvokeVoidAsync("SwalWarning", warning_message);
+        }
+
+        public static async ValueTask SwalError(this IJSRuntime JsRuntime, string error_message)
+        {
+            await JsRuntime.InvokeVoidAsync("SwalError", error_message);
+        }
     }
 }
