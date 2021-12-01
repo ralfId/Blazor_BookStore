@@ -39,7 +39,6 @@ namespace Business.Repositories
         {
             Book book = _mapper.Map<BookDto, Book>(bookDto);
             book.Creation_date = DateTime.Now;
-            book.Author = string.Empty;
 
             //save the new book in DB
             var newBook = await _dbContext.AddAsync(book);
@@ -86,7 +85,7 @@ namespace Business.Repositories
             }
         }
 
-        public async Task<BookDto> UpdateBook(BookDto bookDto, int bookId)
+        public async Task<BookDto> UpdateBookAsync(BookDto bookDto, int bookId)
         {
             try
             {
@@ -94,7 +93,6 @@ namespace Business.Repositories
                 {
                     Book bookDetails = await _dbContext.Book.FindAsync(bookId);
                     Book book = _mapper.Map<BookDto, Book>(bookDto, bookDetails);
-                    book.Author = string.Empty;
                     book.Creation_date = DateTime.Now;
 
                     var bookUpdate = _dbContext.Update(book);

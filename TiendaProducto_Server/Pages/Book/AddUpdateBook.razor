@@ -1,0 +1,119 @@
+﻿@page "/book/addbook";
+@page "/book/updatebook/{Id:int}"
+@using Models;
+@using Business.Repositories.IRepository;
+@inject IBookRepository bookRepo;
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime JsRuntime;
+
+<div class="row mt-2 mb-5">
+    <h3 class="card-title text-primary mb-3 ml-3 ">@Title Book</h3>
+
+    <div class="col-md-12">
+        <EditForm Model="@BookModel" OnValidSubmit="@HandleBook">
+            <DataAnnotationsValidator />
+            @*<ValidationSummary/>*@
+            <div class="form-group">
+                <label>Name</label>
+                <InputText @bind-Value="BookModel.Name" class="form-control"></InputText>
+                <ValidationMessage For="()=> BookModel.Name" />
+            </div>
+
+            <div class="form-group">
+                <label>Price</label>
+                <InputNumber @bind-Value="BookModel.Regular_price" class="form-control"></InputNumber>
+                <ValidationMessage For="()=> BookModel.Regular_price" />
+            </div>
+
+            <div class="form-group">
+                <label>Author</label>
+                <InputText @bind-Value="BookModel.Author" class="form-control"></InputText>
+                <ValidationMessage For="()=> BookModel.Author" />
+            </div>
+
+            <div class="form-group">
+                <label>Details</label>
+                <InputText @bind-Value="BookModel.Details" class="form-control"></InputText>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">@Title book</button>
+                <NavLink href="book" class="btn btn-secundary">Go Back</NavLink>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private BookDto BookModel { get; set; } = new BookDto();
+    private string Title { get; set; } = "Add";
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != null)
+        {
+            //Update a record
+            Title = "Update";
+            BookModel = await bookRepo.GetBookByIdAsync(Id.Value);
+        }
+        else
+        {
+            //add a new record
+            BookModel = new BookDto();
+        }
+    }
+
+    private async Task HandleBook()
+    {
+
+
+
+        try
+        {
+            //check if bookexist
+            var ifBookExist = await bookRepo.BookExistAsync(BookModel.Name);
+
+            /**
+            *if the name of the book exists and the id parameter is null, 
+            *it is trying to add a book with an existing name
+            **/
+            if (ifBookExist != null && Id == null)
+            {
+                await JsRuntime.ToastError("This book name already exists");
+                return;
+            }
+            /**
+            *if the name of the book exists and the id parameter is not null, 
+            it is trying to update a book with an existing name
+            **/
+            if (ifBookExist != null && ifBookExist.Id != Id.Value)
+            {
+                await JsRuntime.ToastError("This book name already exists");
+                return;
+            }
+
+            //update a bookk
+            if (ifBookExist != null  && ifBookExist.Id == Id.Value)
+            {
+                var update = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
+
+            }
+            else //add a book
+            {
+                var add = await bookRepo.CreateBookAsync(BookModel);
+            }
+        }
+        catch (Exception)
+        {
+            await JsRuntime.ToastError("An error occurred on the server");
+        }
+
+
+      
+        NavigationManager.NavigateTo("book");
+    }
+}
