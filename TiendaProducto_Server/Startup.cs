@@ -35,6 +35,7 @@ namespace TiendaProducto_Server
             services.AddDbContext<AppDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookImagesRepository, BookImagesRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
 
             services.AddRazorPages();

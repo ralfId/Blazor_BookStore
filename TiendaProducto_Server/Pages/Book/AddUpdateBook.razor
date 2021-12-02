@@ -2,8 +2,9 @@
 @page "/book/updatebook/{Id:int}"
 @using Models;
 @using Business.Repositories.IRepository;
-@using  TiendaProducto_Server.Services.IService; 
+@using  TiendaProducto_Server.Services.IService;
 @inject IBookRepository bookRepo;
+@inject IBookImagesRepository bookImagesRepo;
 @inject IFileUpload fileUpload;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
@@ -72,6 +73,7 @@
 
     private BookDto BookModel { get; set; } = new BookDto();
     private string Title { get; set; } = "Add";
+    private BookImagesDto BookImages { get; set; }
 
     [Parameter]
     public int? Id { get; set; }
@@ -83,19 +85,22 @@
             //Update a record
             Title = "Update";
             BookModel = await bookRepo.GetBookByIdAsync(Id.Value);
+            if (BookModel?.BookImages != null)
+            {
+                BookModel.ImagesUrl = BookModel.BookImages.Select(url => url.BookImageUrl).ToList();
+            }
         }
         else
         {
             //add a new record
             BookModel = new BookDto();
         }
+
+
     }
 
     private async Task HandleBook()
     {
-
-
-
         try
         {
             //check if bookexist
@@ -123,17 +128,26 @@
             //update a bookk
             if (ifBookExist != null && ifBookExist.Id == Id.Value)
             {
-                var update = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
+                var updatedBook = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
+                if (BookModel.ImagesUrl !=null && BookModel.ImagesUrl.Any())
+                {
+                    await AddBookImages(updatedBook);
+                }
+                await JsRuntime.ToastSuccess("book updated successfully");
+
 
             }
             else //add a book
             {
-                var add = await bookRepo.CreateBookAsync(BookModel);
+                var addedBook = await bookRepo.CreateBookAsync(BookModel);
+                await AddBookImages(addedBook);
+                await JsRuntime.ToastSuccess("book added successfully");
+
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            await JsRuntime.ToastError("An error occurred on the server");
+            await JsRuntime.ToastError(ex.Message);
         }
 
 
@@ -190,6 +204,25 @@
         catch (Exception ex)
         {
             await JsRuntime.ToastError(ex.Message);
+        }
+    }
+
+    private async Task AddBookImages(BookDto book)
+    {
+        foreach (var imgUrl in BookModel.ImagesUrl)
+        {
+            if (BookModel.BookImages == null || 
+                BookModel.BookImages.Where(x => x.BookImageUrl == imgUrl).Count() == 0)
+            {
+                BookImages = new BookImagesDto()
+                {
+                    BookId = book.Id,
+                    BookImageUrl = imgUrl
+                };
+
+                await bookImagesRepo.AddBookImageAsync(BookImages);
+            }
+
         }
     }
 }
