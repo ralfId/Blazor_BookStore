@@ -52,7 +52,7 @@
                                 <div class="img-book" style="background: url('@image') 50% 50%">
                                     <span class="img-book-title">@counter</span>
                                 </div>
-                                <button class="btn btn-outline-danger btn-block mt-4">
+                                <button class="btn btn-outline-danger btn-block mt-4" @onclick="() => DeleteImage(image)">
                                     Delete
                                 </button>
                             </div>
@@ -129,7 +129,7 @@
             if (ifBookExist != null && ifBookExist.Id == Id.Value)
             {
                 var updatedBook = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
-                if (BookModel.ImagesUrl !=null && BookModel.ImagesUrl.Any())
+                if (BookModel.ImagesUrl != null && BookModel.ImagesUrl.Any())
                 {
                     await AddBookImages(updatedBook);
                 }
@@ -211,7 +211,7 @@
     {
         foreach (var imgUrl in BookModel.ImagesUrl)
         {
-            if (BookModel.BookImages == null || 
+            if (BookModel.BookImages == null ||
                 BookModel.BookImages.Where(x => x.BookImageUrl == imgUrl).Count() == 0)
             {
                 BookImages = new BookImagesDto()
@@ -223,6 +223,37 @@
                 await bookImagesRepo.AddBookImageAsync(BookImages);
             }
 
+        }
+    }
+
+    internal async Task DeleteImage(string imgUrl)
+    {
+        try
+        {
+            var imgIndex = BookModel.ImagesUrl.FindIndex(x => x == imgUrl);//get url index
+            var imgName = imgUrl.Replace($"images_books", "");
+
+            if (Id == null && Title == "Add")
+            {
+                var result =  fileUpload.DeleteFile(imgName);
+                if (result)
+                {
+                    BookModel.ImagesUrl.RemoveAt(imgIndex);
+                    await JsRuntime.ToastSuccess("Image deleted");
+                    return;
+
+                }
+                else
+                {
+                    await JsRuntime.ToastError("Can't delete image");
+                    return;
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            await JsRuntime.ToastError(ex.Message);
         }
     }
 }

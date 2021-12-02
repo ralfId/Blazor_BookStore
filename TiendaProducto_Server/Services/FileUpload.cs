@@ -55,7 +55,7 @@ namespace TiendaProducto_Server.Services
         {
             try
             {
-                var filePath = $"{_webHostEnvironment.WebRootPath}\\ImageBooks\\{fileName}";
+                var filePath = $"{_webHostEnvironment.WebRootPath}\\images_books\\{fileName}";
 
                 if (File.Exists(filePath))
                 {
