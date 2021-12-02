@@ -2,9 +2,12 @@
 @page "/book/updatebook/{Id:int}"
 @using Models;
 @using Business.Repositories.IRepository;
+@using  TiendaProducto_Server.Services.IService; 
 @inject IBookRepository bookRepo;
+@inject IFileUpload fileUpload;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
+
 
 <div class="row mt-2 mb-5">
     <h3 class="card-title text-primary mb-3 ml-3 ">@Title Book</h3>
@@ -36,6 +39,27 @@
                 <InputText @bind-Value="BookModel.Details" class="form-control"></InputText>
             </div>
 
+            <div class="form-group">
+                <InputFile OnChange="HandleUploadImages" multiple></InputFile>
+                <div class="row">
+                    @if (BookModel.ImagesUrl != null && BookModel.ImagesUrl.Count > 0)
+                    {
+                        int counter = 1;
+                        @foreach (var image in BookModel.ImagesUrl)
+                        {
+                            <div class="col-md-2 mt-3">
+                                <div class="img-book" style="background: url('@image') 50% 50%">
+                                    <span class="img-book-title">@counter</span>
+                                </div>
+                                <button class="btn btn-outline-danger btn-block mt-4">
+                                    Delete
+                                </button>
+                            </div>
+                            counter++;
+                        }
+                    }
+                </div>
+            </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">@Title book</button>
                 <NavLink href="book" class="btn btn-secundary">Go Back</NavLink>
@@ -78,7 +102,7 @@
             var ifBookExist = await bookRepo.BookExistAsync(BookModel.Name);
 
             /**
-            *if the name of the book exists and the id parameter is null, 
+            *if the name of the book exists and the id parameter is null,
             *it is trying to add a book with an existing name
             **/
             if (ifBookExist != null && Id == null)
@@ -87,7 +111,7 @@
                 return;
             }
             /**
-            *if the name of the book exists and the id parameter is not null, 
+            *if the name of the book exists and the id parameter is not null,
             it is trying to update a book with an existing name
             **/
             if (ifBookExist != null && ifBookExist.Id != Id.Value)
@@ -97,7 +121,7 @@
             }
 
             //update a bookk
-            if (ifBookExist != null  && ifBookExist.Id == Id.Value)
+            if (ifBookExist != null && ifBookExist.Id == Id.Value)
             {
                 var update = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
 
@@ -113,7 +137,59 @@
         }
 
 
-      
+
         NavigationManager.NavigateTo("book");
+    }
+
+    private async Task HandleUploadImages(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var imagesLst = new List<string>();
+
+            if (e.GetMultipleFiles().Count > 0)
+            {
+                foreach (var img in e.GetMultipleFiles())
+                {
+                    System.IO.FileInfo fileInfo = new System.IO.FileInfo(img.Name);
+
+                    if (fileInfo.Extension == ".jpg" ||
+                        fileInfo.Extension == ".jpeg" ||
+                        fileInfo.Extension == ".png")
+                    {
+                        var pathFileUpload = await fileUpload.UploadFileAsync(img);
+                        imagesLst.Add(pathFileUpload);
+                    }
+                    else
+                    {
+                        await JsRuntime.ToastError("Please select files with the extension .jpg .jpeg or .png");
+                        return;
+                    }
+                }
+
+                if (imagesLst.Any())
+                {
+                    if (BookModel.ImagesUrl != null && BookModel.ImagesUrl.Any())
+                    {
+                        BookModel.ImagesUrl.AddRange(imagesLst);
+                    }
+                    else
+                    {
+                        BookModel.ImagesUrl = new List<string>();
+                        BookModel.ImagesUrl.AddRange(imagesLst);
+
+                    }
+                }
+                else
+                {
+                    await JsRuntime.ToastError("could not upload images");
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await JsRuntime.ToastError(ex.Message);
+        }
     }
 }
