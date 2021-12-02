@@ -63,7 +63,8 @@ namespace Business.Repositories
         {
             try
             {
-                IEnumerable<BookDto> bookLstDto = _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(_dbContext.Book);
+                IEnumerable<BookDto> bookLstDto = 
+                    _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(_dbContext.Book.Include(x => x.BookImages));
                 return bookLstDto;
             }
             catch (Exception ex)
@@ -76,7 +77,7 @@ namespace Business.Repositories
         {
             try
             {
-                var book = await _dbContext.Book.FirstOrDefaultAsync(x => x.Id == bookId);
+                var book = await _dbContext.Book.Include( x => x.BookImages).FirstOrDefaultAsync(x => x.Id == bookId);
                 return _mapper.Map<Book, BookDto>(book);
             }
             catch (Exception ex)
