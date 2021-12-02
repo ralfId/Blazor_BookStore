@@ -22,12 +22,21 @@ namespace Business.Repositories
             _mapper = mapper;
         }
 
-        public async Task<BookDto> BookExistAsync(string bookName)
+        public async Task<BookDto> BookExistAsync(string bookName, int bookId = 0)
         {
             try
             {
-                var book = await _dbContext.Book.FirstOrDefaultAsync(x => x.Name.ToLower() == bookName.ToLower());
-                return _mapper.Map<Book, BookDto>(book);
+                if (bookId == 0)
+                {
+                    var book = await _dbContext.Book.FirstOrDefaultAsync(x => x.Name.ToLower() == bookName.ToLower());
+                    return _mapper.Map<Book, BookDto>(book);
+                }
+                else
+                {
+                    var book = await _dbContext.Book.FirstOrDefaultAsync(x => x.Name.ToLower() == bookName.ToLower() && x.Id != bookId);
+                    return _mapper.Map<Book, BookDto>(book);
+                }
+                
             }
             catch (Exception ex)
             {

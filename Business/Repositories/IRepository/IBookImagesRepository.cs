@@ -11,6 +11,7 @@ namespace Business.Repositories.IRepository
     {
         public Task<int> AddBookImageAsync(BookImagesDto imagesDto);
         public Task<int> DeleteBookImageByIdAsync(int imageId);
+        public Task<int> DeleteBookImageByUrlAsync(string imageUrl);
         public Task<int> DeleteAllBookImagesAsync(int bookId);
         public Task<IEnumerable<BookImagesDto>> GetBookImageListAsync(int bookId);
     }

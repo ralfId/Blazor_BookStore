@@ -13,7 +13,7 @@ namespace Business.Repositories.IRepository
         public Task<BookDto> GetBookByIdAsync(int bookId);
         public Task<IEnumerable<BookDto>> GetAllBooksAsync();
         public Task<BookDto> UpdateBookAsync(BookDto bookDto, int bookId);
-        public Task<BookDto> BookExistAsync(string bookName);
+        public Task<BookDto> BookExistAsync(string bookName, int bookId = 0);
         public Task<int> DeleteBookAsync(int bookId);
 
 
