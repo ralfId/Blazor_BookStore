@@ -17,5 +17,8 @@ namespace Models
         [Required(ErrorMessage = "Type a name for author´s book")]
         public string Author { get; set; }
         public string Details { get; set; }
+        public virtual ICollection<BookImagesDto> BookImages { get; set; }
+        public List<string> ImagesUrl { get; set; }
+
     }
 }

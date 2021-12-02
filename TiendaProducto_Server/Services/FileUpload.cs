@@ -25,10 +25,10 @@ namespace TiendaProducto_Server.Services
             {
                 FileInfo fileInfo = new FileInfo(file.Name);
                 var fileName = Guid.NewGuid().ToString() + fileInfo.Extension;//file name
-                var folderDirectory = $"{_webHostEnvironment.WebRootPath}\\ImageBooks";
-                var path = Path.Combine(_webHostEnvironment.WebRootPath, "ImageBooks", fileName);
+                var folderDirectory = $"{_webHostEnvironment.WebRootPath}\\images_books";
+                var path = Path.Combine(_webHostEnvironment.WebRootPath, "images_books", fileName);
                 var memoryStream = new MemoryStream();
-
+                await file.OpenReadStream().CopyToAsync(memoryStream);
                 //create folder for book images if not exist
                 if (!Directory.Exists(folderDirectory))
                 {
@@ -41,7 +41,7 @@ namespace TiendaProducto_Server.Services
                 }
 
                 //return a full path
-                return $"ImageBooks/{fileName}";
+                return $"images_books/{fileName}";
 
 
             }
@@ -55,7 +55,7 @@ namespace TiendaProducto_Server.Services
         {
             try
             {
-                var filePath = $"{_webHostEnvironment.WebRootPath}\\ImageBooks\\{fileName}";
+                var filePath = $"{_webHostEnvironment.WebRootPath}\\images_books\\{fileName}";
 
                 if (File.Exists(filePath))
                 {

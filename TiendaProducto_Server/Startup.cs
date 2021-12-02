@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TiendaProducto_Server.Data;
+using TiendaProducto_Server.Services;
+using TiendaProducto_Server.Services.IService;
 
 namespace TiendaProducto_Server
 {
@@ -33,6 +35,8 @@ namespace TiendaProducto_Server
             services.AddDbContext<AppDBContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookImagesRepository, BookImagesRepository>();
+            services.AddScoped<IFileUpload, FileUpload>();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
