@@ -5,6 +5,7 @@
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
 @inject TiendaProducto_Server.Services.IService.IFileUpload fileUpload;
+@inject NavigationManager NavigationManager;
 
 <div class=" row mt-4">
     <div class="col-8">
@@ -90,7 +91,7 @@
 
             foreach (var item in bookToDelete.BookImages)
             {
-                var imgName = item.BookImageUrl.Replace($"images_books", "");
+                var imgName = item.BookImageUrl.Replace($"{NavigationManager.BaseUri}images_books", "");
                 fileUpload.DeleteFile(imgName); //delete image from folder
             }
 
