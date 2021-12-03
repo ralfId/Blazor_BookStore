@@ -36,10 +36,10 @@
                 <ValidationMessage For="()=> BookModel.Author" />
             </div>
 
-            <div class="form-group">
+            <div class="form-group " style="height: 300px">
                 <label>Details</label>
                 @*<InputTextArea @bind-Value="BookModel.Details" class="form-control"></InputTextArea>*@
-                <BlazoredTextEditor @ref="@QuillHtml">
+                <BlazoredTextEditor @ref="@QuillHtml" Placeholder="Enter a book description">
                     <ToolbarContent>
                         <select class="ql-header">
                             <option selected=""></option>
@@ -68,12 +68,12 @@
                         </span>
                     </ToolbarContent>
                     <EditorContent>
-                        
+
                     </EditorContent>
                 </BlazoredTextEditor>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="padding-top: 70px; padding-bottom: 90px">
                 <InputFile OnChange="HandleUploadImages" multiple></InputFile>
                 <div class="row">
                     @if (IsLoadingImages)
@@ -145,6 +145,30 @@
 
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        bool loading = true;
+        while (loading)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(BookModel.Details))
+                {
+                    await this.QuillHtml.LoadHTMLContent(BookModel.Details);
+                }
+                loading = false;
+            }
+            catch (Exception)
+            {
+                await Task.Delay(10);
+                loading = true;
+            }
+        }
+
+    }
+
     private async Task HandleBook()
     {
         try
@@ -162,6 +186,8 @@
             //update a bookk
             if (BookModel.Id != 0 && Title == "Update")
             {
+                BookModel.Details = await QuillHtml.GetHTML();
+
                 var updatedBook = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
                 if (BookModel.ImagesUrl != null && BookModel.ImagesUrl.Any())
                 {
@@ -182,6 +208,7 @@
             }
             else //add a book
             {
+                BookModel.Details = await QuillHtml.GetHTML();
                 var addedBook = await bookRepo.CreateBookAsync(BookModel);
                 await AddBookImages(addedBook);
                 await JsRuntime.ToastSuccess("book added successfully");
@@ -284,7 +311,7 @@
 
             if (Id == null && Title == "Add")
             {
-                var result =  fileUpload.DeleteFile(imgName);
+                var result = fileUpload.DeleteFile(imgName);
             }
             else
             {
