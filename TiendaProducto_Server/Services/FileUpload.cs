@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,10 +14,11 @@ namespace TiendaProducto_Server.Services
     public class FileUpload : IFileUpload
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public FileUpload(IWebHostEnvironment webHostEnvironment)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public FileUpload(IWebHostEnvironment webHostEnvironment, IHttpContextAccessor contextAccessor)
         {
             _webHostEnvironment = webHostEnvironment;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<string> UploadFileAsync(IBrowserFile file)
@@ -40,8 +42,12 @@ namespace TiendaProducto_Server.Services
                     memoryStream.WriteTo(fs);
                 }
 
-                //return a full path
-                return $"images_books/{fileName}";
+
+                                //get http or https                             //take the rest of the route
+                var url = $"{_contextAccessor.HttpContext.Request.Scheme}://{_contextAccessor.HttpContext.Request.Host.Value}";
+
+                //return a full route
+                return $"{url}/images_books/{fileName}";
 
 
             }

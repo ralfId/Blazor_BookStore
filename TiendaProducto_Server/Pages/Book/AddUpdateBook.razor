@@ -307,7 +307,7 @@
         try
         {
             var imgIndex = BookModel.ImagesUrl.FindIndex(x => x == imgUrl);//get url index
-            var imgName = imgUrl.Replace($"images_books", "");
+            var imgName = imgUrl.Replace($"{NavigationManager.BaseUri}images_books", "");
 
             if (Id == null && Title == "Add")
             {
