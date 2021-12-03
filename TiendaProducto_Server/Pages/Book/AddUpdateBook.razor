@@ -3,6 +3,7 @@
 @using Models;
 @using Business.Repositories.IRepository;
 @using  TiendaProducto_Server.Services.IService;
+@using Blazored.TextEditor;
 @inject IBookRepository bookRepo;
 @inject IBookImagesRepository bookImagesRepo;
 @inject IFileUpload fileUpload;
@@ -37,7 +38,39 @@
 
             <div class="form-group">
                 <label>Details</label>
-                <InputTextArea @bind-Value="BookModel.Details" class="form-control"></InputTextArea>
+                @*<InputTextArea @bind-Value="BookModel.Details" class="form-control"></InputTextArea>*@
+                <BlazoredTextEditor @ref="@QuillHtml">
+                    <ToolbarContent>
+                        <select class="ql-header">
+                            <option selected=""></option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                            <option value="3"></option>
+                            <option value="4"></option>
+                            <option value="5"></option>
+                        </select>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                        </span>
+                    </ToolbarContent>
+                    <EditorContent>
+                        
+                    </EditorContent>
+                </BlazoredTextEditor>
             </div>
 
             <div class="form-group">
@@ -86,6 +119,7 @@
     private BookImagesDto BookImages { get; set; }
     private List<string> ImagesToDelete { get; set; } = new List<string>();
     public bool IsLoadingImages { get; set; } = false;
+    public BlazoredTextEditor QuillHtml { get; set; } = new BlazoredTextEditor();
 
     [Parameter]
     public int? Id { get; set; }
