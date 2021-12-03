@@ -35,3 +35,12 @@ window.SwalError = (message) => {
         'error'
     )
 };
+
+//modal confirm remove item
+window.ShowModalDeleteConfirmation = () => {
+    $('#ModalDeleteConfirmation').modal('show');
+};
+
+window.HideModalDeleteConfirmation = () => {
+    $('#ModalDeleteConfirmation').modal('hide');
+};
