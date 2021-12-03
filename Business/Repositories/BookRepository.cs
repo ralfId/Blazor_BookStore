@@ -6,7 +6,6 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Repositories
@@ -62,6 +61,13 @@ namespace Business.Repositories
             var bookDetail = await _dbContext.Book.FindAsync(bookId);
             if (bookDetail != null)
             {
+                var images = await _dbContext.BookImages.Where(x => x.BookId == bookId).ToListAsync();//get all images with the parameter bookid
+
+                if (images != null && images.Any()) //if list contain elements
+                {
+                    _dbContext.BookImages.RemoveRange(images); //delete images from book in DB
+                }
+
                 _dbContext.Book.Remove(bookDetail);
                 return await _dbContext.SaveChangesAsync();
             }

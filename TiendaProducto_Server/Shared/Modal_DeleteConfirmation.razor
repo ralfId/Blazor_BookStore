@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ejemploModalLabel">Confirm Removal</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close bg-dark" data-dismiss="modal" aria-label="Close" @onclick="()=> OnConfirmChanged(false)">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -11,18 +11,41 @@
                 Are you sure you want to delete this item?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="()=> OnConfirmChanged(false)">
                     Cancel
                 </button>
-
-                <button type="button" class="btn btn-danger">
-                    Remove
-                </button>
+                @if (StarProcess)
+                {
+                    <button type="button" class="btn btn-danger">
+                        <i class="fade fa-spin fa-spiner"></i>
+                        processing ...
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-danger" @onclick="()=> OnConfirmChanged(true)">
+                        Remove
+                    </button>
+                }
             </div>
         </div>
     </div>
 </div>
 
 @code {
+
+    [Parameter]
+    public EventCallback<bool> ConfirmChanged { get; set; }
+    public bool StarProcess { get; set; } = false;
+
+    protected async Task OnConfirmChanged(bool value)
+    {
+        if (value)
+        {
+            StarProcess = true;
+            await ConfirmChanged.InvokeAsync(value);
+        StarProcess = false;
+        }
+    }
 
 }

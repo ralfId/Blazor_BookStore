@@ -4,7 +4,7 @@
 @inject IBookRepository bookRepo;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
-
+@inject TiendaProducto_Server.Services.IService.IFileUpload fileUpload;
 
 <div class=" row mt-4">
     <div class="col-8">
@@ -41,6 +41,9 @@
                                     <NavLink href="@($"/book/updatebook/{book.Id}")" class="btn btn-primary">
                                         Update
                                     </NavLink>
+                                    <button class="btn btn-danger" type="button" @onclick="() => HandleDeleteBook(book.Id)">
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -58,19 +61,47 @@
 </div>
 
 
-<Modal_DeleteConfirmation></Modal_DeleteConfirmation>
+<Modal_DeleteConfirmation ConfirmChanged="ConfirmDelete_Click"></Modal_DeleteConfirmation>
 
 @code {
 
     private IEnumerable<BookDto> booksList { get; set; } = new List<BookDto>();
-
+    private int? BookId { get; set; } = null;
     protected override async Task OnInitializedAsync()
     {
         booksList = await bookRepo.GetAllBooksAsync();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await JsRuntime.InvokeVoidAsync("ShowModalDeleteConfirmation");
+    //}
+
+    private async Task HandleDeleteBook(int bookId)
     {
+        BookId = bookId;
         await JsRuntime.InvokeVoidAsync("ShowModalDeleteConfirmation");
     }
+
+    public async Task ConfirmDelete_Click(bool ConfirmDelete)
+    {
+        await Task.Delay(3000);
+        if (ConfirmDelete && BookId != null)
+        {
+            var bookToDelete = await bookRepo.GetBookByIdAsync(BookId.Value);
+
+            foreach (var item in bookToDelete.BookImages)
+            {
+                var imgName = item.BookImageUrl.Replace($"images_books", "");
+                fileUpload.DeleteFile(imgName); //delete image from folder
+            }
+
+            await bookRepo.DeleteBookAsync(BookId.Value);
+            booksList = await bookRepo.GetAllBooksAsync();
+            await JsRuntime.ToastSuccess("book removed successfully");
+        }
+        await JsRuntime.InvokeVoidAsync("HideModalDeleteConfirmation");
+    }
+
+
 }
