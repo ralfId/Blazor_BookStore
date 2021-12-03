@@ -3,6 +3,7 @@
 @using Models;
 @using Business.Repositories.IRepository;
 @using  TiendaProducto_Server.Services.IService;
+@using Blazored.TextEditor;
 @inject IBookRepository bookRepo;
 @inject IBookImagesRepository bookImagesRepo;
 @inject IFileUpload fileUpload;
@@ -35,12 +36,44 @@
                 <ValidationMessage For="()=> BookModel.Author" />
             </div>
 
-            <div class="form-group">
+            <div class="form-group " style="height: 300px">
                 <label>Details</label>
-                <InputTextArea @bind-Value="BookModel.Details" class="form-control"></InputTextArea>
+                @*<InputTextArea @bind-Value="BookModel.Details" class="form-control"></InputTextArea>*@
+                <BlazoredTextEditor @ref="@QuillHtml" Placeholder="Enter a book description">
+                    <ToolbarContent>
+                        <select class="ql-header">
+                            <option selected=""></option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                            <option value="3"></option>
+                            <option value="4"></option>
+                            <option value="5"></option>
+                        </select>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                        </span>
+                    </ToolbarContent>
+                    <EditorContent>
+
+                    </EditorContent>
+                </BlazoredTextEditor>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="padding-top: 70px; padding-bottom: 90px">
                 <InputFile OnChange="HandleUploadImages" multiple></InputFile>
                 <div class="row">
                     @if (IsLoadingImages)
@@ -86,6 +119,7 @@
     private BookImagesDto BookImages { get; set; }
     private List<string> ImagesToDelete { get; set; } = new List<string>();
     public bool IsLoadingImages { get; set; } = false;
+    public BlazoredTextEditor QuillHtml { get; set; } = new BlazoredTextEditor();
 
     [Parameter]
     public int? Id { get; set; }
@@ -111,6 +145,30 @@
 
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        bool loading = true;
+        while (loading)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(BookModel.Details))
+                {
+                    await this.QuillHtml.LoadHTMLContent(BookModel.Details);
+                }
+                loading = false;
+            }
+            catch (Exception)
+            {
+                await Task.Delay(10);
+                loading = true;
+            }
+        }
+
+    }
+
     private async Task HandleBook()
     {
         try
@@ -128,6 +186,8 @@
             //update a bookk
             if (BookModel.Id != 0 && Title == "Update")
             {
+                BookModel.Details = await QuillHtml.GetHTML();
+
                 var updatedBook = await bookRepo.UpdateBookAsync(BookModel, Id.Value);
                 if (BookModel.ImagesUrl != null && BookModel.ImagesUrl.Any())
                 {
@@ -148,6 +208,7 @@
             }
             else //add a book
             {
+                BookModel.Details = await QuillHtml.GetHTML();
                 var addedBook = await bookRepo.CreateBookAsync(BookModel);
                 await AddBookImages(addedBook);
                 await JsRuntime.ToastSuccess("book added successfully");
@@ -250,7 +311,7 @@
 
             if (Id == null && Title == "Add")
             {
-                var result =  fileUpload.DeleteFile(imgName);
+                var result = fileUpload.DeleteFile(imgName);
             }
             else
             {
