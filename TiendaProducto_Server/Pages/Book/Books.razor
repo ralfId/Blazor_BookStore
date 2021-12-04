@@ -1,13 +1,14 @@
 ﻿@page "/book";
 @using Models;
 @using Business.Repositories.IRepository;
+
 @inject IBookRepository bookRepo;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
 @inject TiendaProducto_Server.Services.IService.IFileUpload fileUpload;
 @inject NavigationManager NavigationManager;
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = Common.ConstantsCommon.Role_Admin )]
 
 <div class=" row mt-4">
     <div class="col-8">
