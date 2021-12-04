@@ -10,7 +10,6 @@
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
 
-@attribute [Authorize]
 
 <div class="row mt-2 mb-5">
     <h3 class="card-title text-primary mb-3 ml-3 ">@Title Book</h3>
@@ -125,8 +124,17 @@
     [Parameter]
     public int? Id { get; set; }
 
+    [CascadingParameter]
+    public  Task<AuthenticationState> AuthenticationState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationState;
+        if (!authState.User.Identity.IsAuthenticated)
+        {
+            var newUri = new Uri(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={newUri.LocalPath}");
+        }
         if (Id != null)
         {
             //Update a record
