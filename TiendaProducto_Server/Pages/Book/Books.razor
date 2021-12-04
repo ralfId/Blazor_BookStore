@@ -7,6 +7,8 @@
 @inject TiendaProducto_Server.Services.IService.IFileUpload fileUpload;
 @inject NavigationManager NavigationManager;
 
+@attribute [Authorize]
+
 <div class=" row mt-4">
     <div class="col-8">
         <h4 class="card-title text-primary">Books</h4>
