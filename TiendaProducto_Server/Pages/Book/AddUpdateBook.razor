@@ -124,8 +124,17 @@
     [Parameter]
     public int? Id { get; set; }
 
+    [CascadingParameter]
+    public  Task<AuthenticationState> AuthenticationState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationState;
+        if (!authState.User.IsInRole(Common.ConstantsCommon.Role_Admin))
+        {
+            var newUri = new Uri(NavigationManager.Uri);
+            NavigationManager.NavigateTo($"/identity/account/login?returnUrl={newUri.LocalPath}");
+        }
         if (Id != null)
         {
             //Update a record
