@@ -39,6 +39,7 @@ namespace TiendaProducto_Server
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IBookImagesRepository, BookImagesRepository>();
             services.AddScoped<IFileUpload, FileUpload>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddRazorPages();
             services.AddHttpContextAccessor();
@@ -47,7 +48,7 @@ namespace TiendaProducto_Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +67,7 @@ namespace TiendaProducto_Server
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            dbInitializer.Initializer();
 
             app.UseEndpoints(endpoints =>
             {
