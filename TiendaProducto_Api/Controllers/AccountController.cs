@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace TiendaProducto_Api.Controllers
 {
-    [Route("api/[controler]/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class AccountController : Controller
@@ -27,8 +27,8 @@ namespace TiendaProducto_Api.Controllers
             _roleManager = roleManager;
         }
 
-        [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterRequestDto registerData)
         {
             //Check for valid data
@@ -41,6 +41,7 @@ namespace TiendaProducto_Api.Controllers
             var newUser = new AppUser()
             {
                 Name = registerData.Name,
+                UserName = registerData.Email,
                 Email = registerData.Email,
                 PhoneNumber = registerData.PhoneNo,
                 EmailConfirmed = true
