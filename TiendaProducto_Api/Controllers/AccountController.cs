@@ -78,5 +78,25 @@ namespace TiendaProducto_Api.Controllers
             //successful response
             return StatusCode(201);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginUser([FromBody] AuthRequestDto loginData)
+        {
+            var signInResult = await _signInManager.PasswordSignInAsync(loginData.UserName, loginData.Password, false, false);
+
+            if (signInResult.Succeeded)
+            {
+                //get user details
+                var userDetails = await _userManager.FindByNameAsync(loginData.UserName);
+                if (userDetails == null)
+                {
+                    return Unauthorized(new AuthResponseDto
+                    {
+
+                    });
+                }
+            }
+        }
     }
 }

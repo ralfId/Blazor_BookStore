@@ -9,7 +9,7 @@ namespace Models.Api
     public class AuthResponseDto
     {
         public bool IsAuthenticated { get; set; }
-        public IEnumerable<string> Errors { get; set; }
+        public string ErrorMessage { get; set; }
         public string Token { get; set; }
         public UserDto UserInfo { get; set; }
     }
