@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Busine
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{0CB9DFA4-BEB0-457B-BB9E-2CEFDD6F3685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaProducto_Api", "TiendaProducto_Api\TiendaProducto_Api.csproj", "{A67C503D-09E5-4A95-BFF8-F6C3DB5D1C0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0CB9DFA4-BEB0-457B-BB9E-2CEFDD6F3685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CB9DFA4-BEB0-457B-BB9E-2CEFDD6F3685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CB9DFA4-BEB0-457B-BB9E-2CEFDD6F3685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A67C503D-09E5-4A95-BFF8-F6C3DB5D1C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A67C503D-09E5-4A95-BFF8-F6C3DB5D1C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A67C503D-09E5-4A95-BFF8-F6C3DB5D1C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A67C503D-09E5-4A95-BFF8-F6C3DB5D1C0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
