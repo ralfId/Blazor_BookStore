@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Models.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using TiendaProducto_Api.Helpers;
 
@@ -106,6 +109,37 @@ namespace TiendaProducto_Api.Controllers
                 }
 
             }
+        }
+
+        //create token
+        private SigningCredentials GetSigningCredentials()
+        {
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_aPISettings.SecretKey));
+            return new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+        }
+
+        //create claims
+        private async Task<List<Claim>> GetClaimsAsync(AppUser user)
+        {
+            //common claim
+            var claimsList = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("Id", user.Id),
+            };
+
+            //get user roles
+            var roles = await _userManager.GetRolesAsync(await _userManager.FindByEmailAsync(user.Email));
+
+            foreach (var role in roles)
+            {
+                claimsList.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            return claimsList;
+
+
         }
     }
 }
