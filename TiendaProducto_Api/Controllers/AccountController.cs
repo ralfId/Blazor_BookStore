@@ -3,11 +3,13 @@ using DataAccess.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Models.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TiendaProducto_Api.Helpers;
 
 namespace TiendaProducto_Api.Controllers
 {
@@ -19,12 +21,17 @@ namespace TiendaProducto_Api.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly APISettings _aPISettings;
 
-        public AccountController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(SignInManager<AppUser> signInManager,
+            UserManager<AppUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IOptions<APISettings> options)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _aPISettings = options.Value;
         }
 
         [HttpPost]
@@ -93,9 +100,11 @@ namespace TiendaProducto_Api.Controllers
                 {
                     return Unauthorized(new AuthResponseDto
                     {
-
+                        IsAuthenticated = false,
+                        ErrorMessage = "invalid authentication"
                     });
                 }
+
             }
         }
     }
