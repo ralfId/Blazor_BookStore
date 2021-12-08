@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Models.Api;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -108,10 +109,51 @@ namespace TiendaProducto_Api.Controllers
                     });
                 }
 
+                var signingCredentials = GetSigningCredentials();
+                var getClaims = await GetClaimsAsync(userDetails);
+
+                //create token options
+                var tokenOptions = new JwtSecurityToken
+                    (
+                        issuer: _aPISettings.ValidIssuer,
+                        audience: _aPISettings.ValidAudience,
+                        claims: getClaims,
+                        expires: DateTime.Now.AddDays(30),
+                        signingCredentials: signingCredentials
+                    );
+
+                //create token 
+                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+
+                //return user info
+                return Ok(new AuthResponseDto
+                {
+                    IsAuthenticated = true,
+                    ErrorMessage = string.Empty,
+                    Token = token,
+                    UserInfo = new UserDto
+                    {
+                        Id = userDetails.Id,
+                        Name = userDetails.Name,
+                        Email = userDetails.Email,
+                        PhoneNo = userDetails.PhoneNumber
+                    }
+                });
+
+            }
+            else
+            {
+                return Unauthorized(new AuthResponseDto
+                {
+                    IsAuthenticated = false,
+                    ErrorMessage = "invalid authentication"
+                });
+
             }
         }
 
-        //create token
+        //Getting Signing Credentials
         private SigningCredentials GetSigningCredentials()
         {
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_aPISettings.SecretKey));
