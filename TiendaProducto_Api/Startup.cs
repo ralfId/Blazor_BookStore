@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,8 +53,8 @@ namespace TiendaProducto_Api
 
             }).AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = false,
-                x.SaveToken = true,
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -69,10 +70,21 @@ namespace TiendaProducto_Api
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IBookImagesRepository, BookImagesRepository>();
+            //config  CORS
+            services.AddCors(cr => cr.AddPolicy("TiendaProductos", builder => 
+            {
+                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            }));
 
             services.AddRouting(opt => opt.LowercaseUrls = true);
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null)
+                .AddNewtonsoftJson(opt =>
+                {
+                    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TiendaProducto_Api", Version = "v1" });
@@ -90,9 +102,10 @@ namespace TiendaProducto_Api
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("TiendaProductos");
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
