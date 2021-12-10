@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using Models.ViewModels;
-
+@inject ILocalStorageService localStorage;
+@inject IJSRuntime jsRuntime;
+@inject NavigationManager NavigationManager;
 
 <div class="row p-4 m-0 w-100">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -26,13 +28,13 @@
         </a>
     </div>
 </div>
-<EditForm>
+<EditForm Model="HomeVM" OnValidSubmit="SaveInitData">
     <div class="row p-0 mx-0 mt-4 justify-content-center">
 
         <div class="col-8 col-md-3 pl-2 pr-2">
             <div class="form-group">
                 <label>Autor</label>
-                <InputText type="text" @bind-Value="HomeVM.Author"  class="form-control" required/>
+                <InputText type="text" @bind-Value="HomeVM.Author" class="form-control" required />
             </div>
         </div>
 
@@ -52,4 +54,17 @@
 @code
 {
     public HomeVM HomeVM { get; set; }
+
+    private async Task SaveInitData()
+    {
+        try
+        {
+            await localStorage.SetItemAsync(ConstantsCommon.Initial_Author, HomeVM);
+            NavigationManager.NavigateTo("/store/books");
+        }
+        catch (Exception ex)
+        {
+            await jsRuntime.ToastError(ex.Message);
+        }
+    }
 }
