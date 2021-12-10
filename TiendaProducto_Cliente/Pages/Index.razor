@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using Models.ViewModels;
+
 
 <div class="row p-4 m-0 w-100">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -24,13 +26,13 @@
         </a>
     </div>
 </div>
-<form>
+<EditForm>
     <div class="row p-0 mx-0 mt-4 justify-content-center">
 
         <div class="col-8 col-md-3 pl-2 pr-2">
             <div class="form-group">
                 <label>Autor</label>
-                <input type="text" class="form-control" />
+                <InputText type="text" @bind-Value="HomeVM.Author"  class="form-control" required/>
             </div>
         </div>
 
@@ -44,4 +46,10 @@
         </div>
 
     </div>
-</form>
+</EditForm>
+
+
+@code
+{
+    public HomeVM HomeVM { get; set; }
+}
