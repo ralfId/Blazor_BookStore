@@ -20,9 +20,19 @@ namespace TiendaProducto_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBooks()
+        public async Task<IActionResult> GetBooks(string author = null)
         {
-            var allBooks = await _bookRepository.GetAllBooksAsync();
+
+            if (string.IsNullOrEmpty(author))
+            {
+                return BadRequest(new ErrorModel()
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    ErrorMessage = "parameter auhtor is required"
+                });
+            }
+
+            var allBooks = await _bookRepository.GetAllBooksAsync(author);
 
             return Ok(allBooks);
 

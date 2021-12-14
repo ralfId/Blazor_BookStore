@@ -74,13 +74,23 @@ namespace Business.Repositories
             return 0;
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync()
+        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(string author)
         {
             try
             {
-                IEnumerable<BookDto> bookLstDto = 
+                if (author == null)
+                {
+                    IEnumerable<BookDto> bookLstDto =
                     _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(_dbContext.Book.Include(x => x.BookImages));
-                return bookLstDto;
+                    return bookLstDto;
+                }
+                else
+                {
+                    IEnumerable<BookDto> bookLstDto = 
+                        _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>( _dbContext.Book.Where(x => x.Author.ToLower() == author.ToLower()).Include(x => x.BookImages));
+                    return bookLstDto;
+                }
+                
             }
             catch (Exception ex)
             {

@@ -70,6 +70,8 @@ namespace TiendaProducto_Api
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IBookImagesRepository, BookImagesRepository>();
+            services.AddScoped<IBookOrderDetailsRepository, BookOrderDetailsRepository>();
+
             //config  CORS
             services.AddCors(cr => cr.AddPolicy("TiendaProductos", builder => 
             {
