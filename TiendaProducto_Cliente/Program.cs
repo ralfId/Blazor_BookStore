@@ -23,6 +23,7 @@ namespace TiendaProducto_Cliente
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseApiUrl")) });
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IBookOrderDetailService, BookOrderDetailService>();
             await builder.Build().RunAsync();
         }
     }
