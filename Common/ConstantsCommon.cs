@@ -14,6 +14,11 @@ namespace Common
 
         //LOCAL STORAGE
         public const string Initial_Author = "Initial_Author";
-        
+
+        //PAYMENT STATUS
+        public const string PS_Pending = "Pending";
+        public const string PS_Canceled = "Canceled";
+
+
     }
 }
