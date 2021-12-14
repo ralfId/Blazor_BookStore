@@ -1,6 +1,6 @@
 ﻿@page "/store/book-detail/{Id:int}"
-
-@inject IJSRuntime jsRuntime;
+@using TiendaProducto_Cliente.Helpers
+@inject IJSRuntime JsRuntime;
 @inject IBookService bookService;
 
 @if (BookOrder?.OrderDetails?.BookDto?.BookImages == null)
@@ -62,27 +62,27 @@ else
             </div>
 
             <div class="col-12 col-lg-5 p-4 2 mt-4 mt-md-0" style="border: 1px solid #87bdd8;">
-                <form Model="" class="container" OnValidSubmit="HandleAdquirir">
+                <EditForm Model="BookOrder" class="container" OnValidSubmit="HandlePurchase">
 
 
                     <div class="row px-2 text-primary border-bottom"><div class="col-7 py-1"><p style="font-size:x-large;margin:0px;">Ingresa tus Datos</p></div></div>
 
                     <div class="form-group pt-2">
-                        <label class="text-primary">Nombre</label>
-                        <input type="text" class="form-control" />
+                        <label class="text-primary">Name</label>
+                        <InputText @bind-Value="BookOrder.OrderDetails.Name" type="text" class="form-control" />
                     </div>
                     <div class="form-group pt-2">
-                        <label class="text-primary">Telefono</label>
-                        <input type="text" class="form-control" />
+                        <label class="text-primary">Phone</label>
+                        <InputText @bind-Value="BookOrder.OrderDetails.PhoneNo" type="text" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label class="text-primary">Email</label>
-                        <input type="text" class="form-control" />
+                        <InputText @bind-Value="BookOrder.OrderDetails.Email" type="text" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary form-control">Adquirir Ahora</button>
+                        <button type="submit" class="btn btn-primary form-control">Buy now</button>
                     </div>
-                </form>
+                </EditForm>
             </div>
         </div>
     </div>
@@ -108,8 +108,40 @@ else
         }
         catch (Exception ex)
         {
-            await jsRuntime.ToastError(ex.Message);
+            await JsRuntime.ToastError(ex.Message);
         }
     }
 
+    private async Task HandlePurchase()
+    {
+        if (!await HandleValidaions())
+        {
+            return;
+        }
+
+
+    }
+
+    private async Task<bool> HandleValidaions()
+    {
+        if (string.IsNullOrEmpty(BookOrder.OrderDetails.Name))
+        {
+            await JsRuntime.ToastSuccess("The name must not be empty");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(BookOrder.OrderDetails.PhoneNo))
+        {
+            await JsRuntime.ToastError("The phone number must not be empty");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(BookOrder.OrderDetails.Email))
+        {
+            await JsRuntime.ToastError("The email must not be empty");
+            return false;
+        }
+
+        return true;
+    }
 }
