@@ -19,6 +19,8 @@ namespace TiendaProducto_Api.Controllers
         {
             _configuration = configuration;
         }
+
+        [HttpPost]
         public async  Task<ActionResult> Create(StripePaymentDto paymentDto)
         {
             try
