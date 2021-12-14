@@ -39,7 +39,7 @@ namespace TiendaProducto_Api.Controllers
         }
 
         [HttpGet("{bookId}")]
-        public async Task<IActionResult> GetBookById(int? bookId, string author = null)
+        public async Task<IActionResult> GetBookById(int? bookId)
         {
             if (bookId == null)
             {
@@ -51,16 +51,7 @@ namespace TiendaProducto_Api.Controllers
                 });
             }
 
-            if (string.IsNullOrEmpty(author))
-            {
-                return BadRequest(new ErrorModel()
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    ErrorMessage = "parameter auhtor is required"
-                });
-            }
-
-            var bookDetail = await _bookRepository.GetBookByIdAsync(bookId.Value, author);
+            var bookDetail = await _bookRepository.GetBookByIdAsync(bookId.Value);
 
             if (bookDetail == null)
             {
