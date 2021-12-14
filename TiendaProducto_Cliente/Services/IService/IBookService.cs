@@ -9,6 +9,6 @@ namespace TiendaProducto_Cliente.Services.IService
     public interface IBookService
     {
         public Task<IEnumerable<BookDto>> GetBooksByAuthorAsync(string author);
-        public Task<BookDto> GetBookAsync(int bookId, string author);
+        public Task<BookDto> GetBookAsync(int bookId);
     }
 }

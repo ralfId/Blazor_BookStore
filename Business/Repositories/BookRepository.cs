@@ -98,7 +98,7 @@ namespace Business.Repositories
             }
         }
 
-        public async Task<BookDto> GetBookByIdAsync(int bookId, string author)
+        public async Task<BookDto> GetBookByIdAsync(int bookId)
         {
             try
             {

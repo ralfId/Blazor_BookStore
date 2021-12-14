@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.Api;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,31 @@ namespace TiendaProducto_Cliente.Services
             _httpClient = httpClient;
         }
 
-        public Task<BookDto> GetBookAsync(int bookId, string author)
+        public async Task<BookDto> GetBookAsync(int bookId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/book/{bookId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<BookDto>(content);
+                }
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                   var errorMsg = JsonConvert.DeserializeObject<ErrorModel>(content);
+                    throw new Exception(errorMsg.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<IEnumerable<BookDto>> GetBooksByAuthorAsync(string author)
