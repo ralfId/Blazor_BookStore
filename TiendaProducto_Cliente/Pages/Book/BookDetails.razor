@@ -2,6 +2,9 @@
 @using TiendaProducto_Cliente.Helpers
 @inject IJSRuntime JsRuntime;
 @inject IBookService bookService;
+@inject IStripePaymentService stripePayment;
+@inject IBookOrderDetailService orderDetailService;
+@inject ILocalStorageService localStorage;
 
 @if (BookOrder?.OrderDetails?.BookDto?.BookImages == null)
 {
@@ -100,11 +103,9 @@ else
         try
         {
             BookOrder.OrderDetails = new BookOrderDetailsDto();
-            if (Id != null)
-            {
-                BookOrder.OrderDetails.BookDto = await bookService.GetBookAsync(Id.Value);
 
-            }
+            if (Id != null)
+                BookOrder.OrderDetails.BookDto = await bookService.GetBookAsync(Id.Value);
         }
         catch (Exception ex)
         {
@@ -119,6 +120,29 @@ else
             return;
         }
 
+        try
+        {
+            var paymentDto = new StripePaymentDto()
+            {
+                Amount = Convert.ToInt32(BookOrder.OrderDetails.BookDto.Regular_price * 100),
+                ProductName = BookOrder.OrderDetails.BookDto.Name,
+                ReturnUrl = "store/book-detail/" + Id
+            };
+
+            var result = await stripePayment.CheckoutAsync(paymentDto);
+
+            BookOrder.OrderDetails.StripeSessionId = result.Data.ToString();
+            BookOrder.OrderDetails.BookId = BookOrder.OrderDetails.BookDto.Id;
+            BookOrder.OrderDetails.TotalCost = BookOrder.OrderDetails.BookDto.Regular_price;
+
+            var savedOrderDetails = await orderDetailService.SaveOrderDetailAsync(BookOrder.OrderDetails);
+            await localStorage.SetItemAsync(ConstantsCommon.LS_OrderDetails, savedOrderDetails);
+
+        }
+        catch (Exception ex)
+        {
+            await JsRuntime.ToastError(ex.Message);
+        }
 
     }
 
