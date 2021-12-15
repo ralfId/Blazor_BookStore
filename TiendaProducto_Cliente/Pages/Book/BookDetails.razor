@@ -126,7 +126,7 @@ else
             {
                 Amount = Convert.ToInt32(BookOrder.OrderDetails.BookDto.Regular_price * 100),
                 ProductName = BookOrder.OrderDetails.BookDto.Name,
-                ReturnUrl = "store/book-detail/" + Id
+                ReturnUrl = $"store/book-detail/{Id}"
             };
 
             var result = await stripePayment.CheckoutAsync(paymentDto);
@@ -136,8 +136,10 @@ else
             BookOrder.OrderDetails.TotalCost = BookOrder.OrderDetails.BookDto.Regular_price;
 
             var savedOrderDetails = await orderDetailService.SaveOrderDetailAsync(BookOrder.OrderDetails);
+            
             await localStorage.SetItemAsync(ConstantsCommon.LS_OrderDetails, savedOrderDetails);
 
+            await JsRuntime.InvokeVoidAsync("redirectToCheckout", result.Data.ToString());
         }
         catch (Exception ex)
         {
@@ -150,7 +152,7 @@ else
     {
         if (string.IsNullOrEmpty(BookOrder.OrderDetails.Name))
         {
-            await JsRuntime.ToastSuccess("The name must not be empty");
+            await JsRuntime.ToastError("The name must not be empty");
             return false;
         }
 

@@ -39,7 +39,7 @@ namespace TiendaProducto_Api.Controllers
                         {
                             PriceData = new SessionLineItemPriceDataOptions
                             {
-                                UnitAmount = paymentDto.Amount*100,
+                                UnitAmount = paymentDto.Amount,
                                 Currency = "usd",
                                 ProductData = new SessionLineItemPriceDataProductDataOptions
                                 {

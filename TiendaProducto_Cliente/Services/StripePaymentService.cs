@@ -29,7 +29,8 @@ namespace TiendaProducto_Cliente.Services
             if (response.IsSuccessStatusCode)
             {
                 var tempContent = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<SuccessModel>(tempContent);
+                var result =  JsonConvert.DeserializeObject<SuccessModel>(tempContent);
+                return result;
             }
             else
             {
