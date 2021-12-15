@@ -18,6 +18,8 @@ namespace TiendaProducto_Api.Controllers
         {
             _orderDetailsRespository = orderDetailsRespository;
         }
+
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] BookOrderDetailsDto detailsDto)
         {
             if (ModelState.IsValid)
