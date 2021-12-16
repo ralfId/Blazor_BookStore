@@ -19,9 +19,24 @@ namespace TiendaProducto_Cliente.Services
             _client = client;
         }
 
-        public Task<BookOrderDetailsDto> MarkSuccessfulPayment(BookOrderDetailsDto detailsDto)
+        public async Task<BookOrderDetailsDto> MarkSuccessfulPayment(BookOrderDetailsDto detailsDto)
         {
-            throw new NotImplementedException();
+            var content = JsonConvert.SerializeObject(detailsDto);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/bookorder/marksuccessfulpayment", bodyContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var tempContent = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<BookOrderDetailsDto>(tempContent);
+                return result;
+            }
+            else
+            {
+                var tempContent = await response.Content.ReadAsStringAsync();
+                var errorModel = JsonConvert.DeserializeObject<ErrorModel>(tempContent);
+                throw new Exception(errorModel.ErrorMessage);
+            }
         }
 
         public async Task<BookOrderDetailsDto> SaveOrderDetailAsync(BookOrderDetailsDto detailsDto)
