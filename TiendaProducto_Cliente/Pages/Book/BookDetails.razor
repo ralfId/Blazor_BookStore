@@ -1,6 +1,7 @@
 ﻿@page "/store/book-detail/{Id:int}"
 @using TiendaProducto_Cliente.Helpers
 @using Microsoft.AspNetCore.Authorization
+@using Models.Api;
 @inject IJSRuntime JsRuntime;
 @inject IBookService bookService;
 @inject IStripePaymentService stripePayment;
@@ -110,6 +111,15 @@ else
 
             if (Id != null)
                 BookOrder.OrderDetails.BookDto = await bookService.GetBookAsync(Id.Value);
+
+            var userInfo = await localStorage.GetItemAsync<UserDto>(ConstantsCommon.LS_UserDetails);
+            if (userInfo != null)
+            {
+                BookOrder.OrderDetails.UserId = userInfo.Id;
+                BookOrder.OrderDetails.Name = userInfo.Name;
+                BookOrder.OrderDetails.PhoneNo = userInfo.PhoneNo;
+                BookOrder.OrderDetails.Email = userInfo.Email;
+            }
         }
         catch (Exception ex)
         {
@@ -140,7 +150,7 @@ else
             BookOrder.OrderDetails.TotalCost = BookOrder.OrderDetails.BookDto.Regular_price;
 
             var savedOrderDetails = await orderDetailService.SaveOrderDetailAsync(BookOrder.OrderDetails);
-            
+
             await localStorage.SetItemAsync(ConstantsCommon.LS_OrderDetails, savedOrderDetails);
 
             await JsRuntime.InvokeVoidAsync("redirectToCheckout", result.Data.ToString());

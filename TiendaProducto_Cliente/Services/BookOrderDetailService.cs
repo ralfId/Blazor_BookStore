@@ -41,7 +41,6 @@ namespace TiendaProducto_Cliente.Services
 
         public async Task<BookOrderDetailsDto> SaveOrderDetailAsync(BookOrderDetailsDto detailsDto)
         {
-            detailsDto.UserId = "UserId";
             var content = JsonConvert.SerializeObject(detailsDto);
             var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/bookorder/Create", bodyContent);
