@@ -1,0 +1,23 @@
+﻿@page "/success-payment";
+
+@inject ILocalStorageService localStorage;
+@inject IBookOrderDetailService orderDetailService;
+
+
+<div class="container">
+    <div class="row mt-4 pt-4">
+        <div class="col-10 offset-1 text-center">
+            <h2 class="text-primary">Compra Confirmada</h2>
+            <p>Su libro a sido comprado correctamente con el Id del pedido ##</p>
+        </div>
+        <div class="col-8 offset-2">
+            <img src="/images/confirmacion.png" width="100%" style="border-radius:30px;" />
+        </div>
+    </div>
+</div>
+
+@code {
+    
+    private bool IsPaymentCompleted { get; set; }
+    private int OrderId { get; set; }
+}
