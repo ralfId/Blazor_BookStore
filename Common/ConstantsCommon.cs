@@ -15,6 +15,7 @@ namespace Common
         //LOCAL STORAGE
         public const string LS_Author = "Initial_Author";
         public const string LS_OrderDetails = "Order_Details";
+        public const string LS_Jwt = "JWT Token";
 
         //PAYMENT STATUS
         public const string PS_Pending = "Pending";
