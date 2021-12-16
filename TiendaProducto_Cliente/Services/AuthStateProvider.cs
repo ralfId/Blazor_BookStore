@@ -30,7 +30,7 @@ namespace TiendaProducto_Cliente.Services
 
             if (token == null)
             {
-                return new AuthenticationState.(new ClaimsPrincipal(new ClaimsIdentity()));
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
