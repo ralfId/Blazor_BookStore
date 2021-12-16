@@ -19,6 +19,7 @@ namespace Common
         //PAYMENT STATUS
         public const string PS_Pending = "Pending";
         public const string PS_Canceled = "Canceled";
+        public const string PS_Paid = "Paid";
 
 
     }
