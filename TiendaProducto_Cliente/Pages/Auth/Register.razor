@@ -1,6 +1,6 @@
 ﻿@page "/register"
-
-<form class="pt-4">
+@using Models.Api
+<EditForm Model="registerReqForm" OnValidSubmit="RegisterUser" class="pt-4">
     <div class="py-4">
         <div class=" row form-group ">
             <div class="col-6 offset-3 ">
@@ -12,32 +12,44 @@
 
                         <hr style="background-color:aliceblue" />
                         <div class="py-2">
-                            <input class="form-control" placeholder="Name..." />
-
+                            <InputText @bind-Value="registerReqForm.Name" class="form-control" placeholder="Name..." />
+                            <ValidationMessage For="()=> registerReqForm.Name" />
                         </div>
                         <div class="py-2">
-                            <input class="form-control" placeholder="Email..." />
-
+                            <InputText @bind-Value="registerReqForm.Email" class="form-control" placeholder="Email..." />
+                            <ValidationMessage For="()=> registerReqForm.Email" />
                         </div>
                         <div class="py-2 input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"> +1</span>
                             </div>
-                            <input class="form-control" placeholder="Phone..." />
+                            <InputText @bind-Value="registerReqForm.PhoneNo" class="form-control" placeholder="Phone..." />
+                            <ValidationMessage For="()=> registerReqForm.PhoneNo" />
 
                         </div>
                         <div class="form-row py-2">
                             <div class="col">
-                                <input type="password" id="password" placeholder="Password..." class="form-control" />
+                                <InputText @bind-Value="registerReqForm.Password" type="password" id="password" placeholder="Password..." class="form-control" />
+                                <ValidationMessage For="()=> registerReqForm.Password" />
+
                             </div>
                             <div class="col">
-                                <input type="password" id="confirm" class="form-control" placeholder="Confirm Password..." />
+                                <InputText @bind-Value="registerReqForm.ConfirmPassword" type="password" id="confirm" class="form-control" placeholder="Confirm Password..." />
+                                <ValidationMessage For="()=> registerReqForm.ConfirmPassword" />
+
                             </div>
 
                         </div>
                         <hr style="background-color:aliceblue" />
                         <div class="py-2">
-                            <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Register</button>
+                            @if (IsBusy)
+                            {
+                                <button type="submit" class="btn btn-success btn-block disabled"><i class="fas fa-sign-in-alt"></i> Wait...</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Register</button>
+                            }
                         </div>
 
 
@@ -49,8 +61,16 @@
 
 
 
-</form>
+</EditForm>
 
 @code {
 
+    private RegisterRequestDto registerReqForm { get; set; }
+    private bool IsBusy { get; set; }
+    private IEnumerable<string> ErrorsLst { get; set; }
+
+    private async Task RegisterUser()
+    {
+
+    }
 }
