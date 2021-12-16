@@ -1,10 +1,14 @@
 ﻿@page "/store/book-detail/{Id:int}"
 @using TiendaProducto_Cliente.Helpers
+@using Microsoft.AspNetCore.Authorization
 @inject IJSRuntime JsRuntime;
 @inject IBookService bookService;
 @inject IStripePaymentService stripePayment;
 @inject IBookOrderDetailService orderDetailService;
 @inject ILocalStorageService localStorage;
+
+@attribute [Authorize(Roles = ConstantsCommon.Role_Client)]
+
 
 @if (BookOrder?.OrderDetails?.BookDto?.BookImages == null)
 {
