@@ -4,9 +4,13 @@
             <Authorizing>
                 <p>Please wait, authorizing the user.</p>
             </Authorizing>
+            <NotAuthorized>
+                <p>Not authorized</p>
+            </NotAuthorized>
         </AuthorizeRouteView>
     </Found>
     <NotFound>
+        <CascadingAuthenticationState></CascadingAuthenticationState>
         <LayoutView Layout="@typeof(MainLayout)">
             <p>Sorry, there's nothing at this address.</p>
         </LayoutView>
