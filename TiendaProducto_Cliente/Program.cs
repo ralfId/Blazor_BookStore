@@ -28,6 +28,7 @@ namespace TiendaProducto_Cliente
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IBookOrderDetailService, BookOrderDetailService>();
             builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             await builder.Build().RunAsync();
         }
     }
