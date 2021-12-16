@@ -87,9 +87,24 @@ namespace Business.Repositories
             }
         }
 
-        public Task<BookOrderDetailsDto> MarkSuccessfulPaymentAsync(int Id)
+        public async Task<BookOrderDetailsDto> MarkSuccessfulPaymentAsync(int Id)
         {
-            throw new NotImplementedException();
+            var data = await _db.BookOrderDetails.FindAsync(Id);
+
+            if (data == null) return null;
+
+            if (!data.IsPaid)
+            {
+                data.IsPaid = true;
+                data.Status = ConstantsCommon.PS_Paid;
+
+                var orderUpdated = _db.BookOrderDetails.Update(data);
+                await _db.SaveChangesAsync();
+
+                return _mapper.Map<BookOrderDetails, BookOrderDetailsDto>(orderUpdated.Entity);
+            }
+
+            return new BookOrderDetailsDto();
         }
 
         public Task<bool> UpdateOrderAsync(int bookOrderId, string status)

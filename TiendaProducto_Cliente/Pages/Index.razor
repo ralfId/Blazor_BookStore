@@ -58,7 +58,7 @@
     {
         try
         {
-            await localStorage.SetItemAsync(ConstantsCommon.Initial_Author, HomeVM);
+            await localStorage.SetItemAsync(ConstantsCommon.LS_Author, HomeVM);
             NavigationManager.NavigateTo("/store/books");
         }
         catch (Exception ex)

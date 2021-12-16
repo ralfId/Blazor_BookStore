@@ -16,7 +16,7 @@ namespace DataAccess.Data
         [Required]
         public string StripeSessionId { get; set; }
         [Required]
-        public long TotalCost { get; set; }
+        public double TotalCost { get; set; }
         [Required]
         public int BookId { get; set; }
         public bool IsPaid { get; set; }

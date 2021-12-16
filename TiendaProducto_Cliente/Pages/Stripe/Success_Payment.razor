@@ -1,0 +1,48 @@
+﻿@page "/success-payment";
+
+@inject ILocalStorageService localStorage;
+@inject IBookOrderDetailService orderDetailService;
+
+
+<div class="container">
+    @if (!IsPaymentCompleted)
+    {
+        <div class="custom-loading">
+            <img src="images/ajax-loader.gif" />
+        </div>
+    }
+    else
+    {
+        <div class="row mt-4 pt-4">
+            <div class="col-10 offset-1 text-center">
+                <h2 class="text-primary">Purchase Confirmed</h2>
+                <p>Your book has been successfully purchased with the order ID @OrderId</p>
+            </div>
+            <div class="col-8 offset-2">
+                <img src="/images/confirmacion.png" width="100%" style="border-radius:30px;" />
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+
+    private bool IsPaymentCompleted { get; set; }
+    private int OrderId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var orderDetails = await localStorage.GetItemAsync<BookOrderDetailsDto>(ConstantsCommon.LS_OrderDetails);
+        OrderId = orderDetails.Id;
+
+        var orderPaymentStatus = await orderDetailService.MarkSuccessfulPayment(orderDetails);
+
+        if (orderPaymentStatus.Status == ConstantsCommon.PS_Paid)
+        {
+            await localStorage.RemoveItemAsync(ConstantsCommon.LS_OrderDetails);
+            await localStorage.RemoveItemAsync(ConstantsCommon.LS_Author);
+
+            IsPaymentCompleted = true;
+        }
+    }
+}

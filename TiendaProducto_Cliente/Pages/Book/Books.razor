@@ -113,9 +113,9 @@ else
     {
         try
         {
-            if (await localStorage.GetItemAsync<HomeVM>(ConstantsCommon.Initial_Author) != null)
+            if (await localStorage.GetItemAsync<HomeVM>(ConstantsCommon.LS_Author) != null)
             {
-                HomeVM = await localStorage.GetItemAsync<HomeVM>(ConstantsCommon.Initial_Author);
+                HomeVM = await localStorage.GetItemAsync<HomeVM>(ConstantsCommon.LS_Author);
             }
 
             await LoadBooks();
@@ -135,7 +135,7 @@ else
     {
         IsLoading = true;
 
-        await localStorage.SetItemAsync(ConstantsCommon.Initial_Author, HomeVM);
+        await localStorage.SetItemAsync(ConstantsCommon.LS_Author, HomeVM);
         await LoadBooks();
 
         IsLoading = false;

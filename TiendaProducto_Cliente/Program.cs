@@ -24,6 +24,7 @@ namespace TiendaProducto_Cliente
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IBookOrderDetailService, BookOrderDetailService>();
+            builder.Services.AddScoped<IStripePaymentService, StripePaymentService>();
             await builder.Build().RunAsync();
         }
     }
