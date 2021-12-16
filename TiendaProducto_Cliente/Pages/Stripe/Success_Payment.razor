@@ -1,7 +1,9 @@
 ﻿@page "/success-payment";
+@using Microsoft.AspNetCore.Authorization
 
 @inject ILocalStorageService localStorage;
 @inject IBookOrderDetailService orderDetailService;
+@attribute [Authorize(Roles = ConstantsCommon.Role_Client)]
 
 
 <div class="container">
