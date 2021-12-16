@@ -1,8 +1,7 @@
 ﻿@page "/register";
 @using Models.Api;
 
-@inject IAuthService authService;
-@inject NavigationManager NavigationManager;
+
 
 <EditForm Model="@registerReqForm" OnValidSubmit="@RegisterUser" class="pt-4">
     <DataAnnotationsValidator/>
@@ -77,29 +76,5 @@
 
 @code {
 
-    private RegisterRequestDto registerReqForm { get; set; } = new RegisterRequestDto();
-    private bool IsBusy { get; set; }
-    private bool ShowErrors { get; set; }
-    private IEnumerable<string> ErrorsLst { get; set; }
-
-    private async Task RegisterUser()
-    {
-        IsBusy = true;
-        ShowErrors = false;
-
-        var registerResp = await authService.RegisterAsync(registerReqForm);
-
-        if (registerResp.IsRegistered)
-        {
-            IsBusy = false;
-            ShowErrors = false;
-            NavigationManager.NavigateTo("/login");
-        }
-        else
-        {
-            IsBusy = false;
-            ErrorsLst = registerResp.Errors;
-            ShowErrors = true;
-        }
-    }
+   
 }
