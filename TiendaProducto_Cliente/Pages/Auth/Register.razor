@@ -1,5 +1,6 @@
 ﻿@page "/register"
 @using Models.Api
+
 <EditForm Model="registerReqForm" OnValidSubmit="RegisterUser" class="pt-4">
     <div class="py-4">
         <div class=" row form-group ">
@@ -10,6 +11,15 @@
                             <strong>Check in</strong>
                         </h3>
 
+                        @if (ShowErrors)
+                        {
+                            <div>
+                                @foreach (var error in ErrorsLst)
+                                {
+                                    <p class="text-danger">@error</p>
+                                }
+                            </div>
+                        }
                         <hr style="background-color:aliceblue" />
                         <div class="py-2">
                             <InputText @bind-Value="registerReqForm.Name" class="form-control" placeholder="Name..." />
@@ -67,6 +77,7 @@
 
     private RegisterRequestDto registerReqForm { get; set; }
     private bool IsBusy { get; set; }
+    private bool ShowErrors { get; set; }
     private IEnumerable<string> ErrorsLst { get; set; }
 
     private async Task RegisterUser()
