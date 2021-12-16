@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Common;
+using Microsoft.AspNetCore.Components.Authorization;
 using Models.Api;
 using Newtonsoft.Json;
 using System;
@@ -17,11 +18,12 @@ namespace TiendaProducto_Cliente.Services
     {
         private readonly HttpClient _client;
         private readonly ILocalStorageService _localStorage;
-
-        public AuthService(HttpClient client, ILocalStorageService localStorage)
+        private readonly AuthenticationStateProvider _authStateProvider;
+        public AuthService(HttpClient client, ILocalStorageService localStorage, AuthenticationStateProvider authStateProvider)
         {
             _client = client;
             _localStorage = localStorage;
+            _authStateProvider = authStateProvider;
         }
 
         public async Task<AuthResponseDto> LoginAsync(AuthRequestDto requestDto)
@@ -36,7 +38,7 @@ namespace TiendaProducto_Cliente.Services
             {
                 await _localStorage.SetItemAsync(ConstantsCommon.LS_Jwt, result.Token);
                 await _localStorage.SetItemAsync(ConstantsCommon.LS_UserDetails, result.UserInfo);
-
+                ((AuthStateProvider)_authStateProvider).NotifyLogin(result.Token);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
 
                 return new AuthResponseDto { IsAuthenticated = true };
@@ -54,6 +56,7 @@ namespace TiendaProducto_Cliente.Services
 
             _client.DefaultRequestHeaders.Authorization = null;
 
+            ((AuthStateProvider)_authStateProvider).NotifyLogout();
         }
 
         public async Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto requestDto)
