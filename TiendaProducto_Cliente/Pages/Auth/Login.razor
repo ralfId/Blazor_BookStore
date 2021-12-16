@@ -6,14 +6,32 @@
             <strong>Login</strong>
         </h3>
 
-        <form>
-            <input id="email" placeholder="Email..." class="form-control mb-2" />
-            <input type="password" placeholder="Password..." id="password" class="form-control mb-2" />
+        <EditForm Model="loginReqForm" OnValidSubmit="LoginUser">
+            <DataAnnotationsValidator />
 
-            <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Log in</button>
+            @if (ShowErrors)
+            {
+                <div>
+                    <p class="text-danger">@ErrorMsg</p>
+                </div>
+            }
+            <InputText @bind-Value="loginReqForm.UserName" id="email" placeholder="Email..." class="form-control mb-2" />
+            <ValidationMessage For="()=> loginReqForm.UserName" />
+            <InputText @bind-Value="loginReqForm.Password" type="password" placeholder="Password..." id="password" class="form-control mb-2" />
+            <ValidationMessage For="()=> loginReqForm.Password" />
+
+
+            @if (IsBusy)
+            {
+                <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Wait...</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-success btn-block"><i class="fas fa-sign-in-alt"></i> Log in</button>
+            }
             <a href="/registro"
                class="btn btn-primary btn-block text-white mt-3"><i class="fas fa-user-plus"></i> Register New User</a>
-        </form>
+        </EditForm>
     </div>
 </div>
 
